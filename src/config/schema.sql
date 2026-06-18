@@ -102,6 +102,6 @@ CREATE TABLE media (
     file_size_bytes INT,
     mime_type VARCHAR(100),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
+);  
 
 CREATE INDEX idx_media_memory_entry_id ON media(memory_entry_id);

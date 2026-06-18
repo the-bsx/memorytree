@@ -199,6 +199,7 @@ const loginUser = asyncHandler(async (req, res) => {
   );
 });
 
+// logout logic
 const logoutUser = asyncHandler(async (req, res) => {
   const id = req.user.id;
 
@@ -209,6 +210,7 @@ const logoutUser = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "User logout sucessfully"));
 });
 
+// refreshtoken generation logic
 const refreshToken = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
 
