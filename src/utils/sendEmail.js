@@ -1,20 +1,24 @@
-import nodemailer from "nodemailer";
+// import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-  host: process.env.MAIL_HOST,
-  port: process.env.MAIL_PORT || 587,
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASSWORD,
-  },
-});
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+// const transporter = nodemailer.createTransport({
+//   host: process.env.MAIL_HOST,
+//   port: process.env.MAIL_PORT || 587,
+//   auth: {
+//     user: process.env.MAIL_USER,
+//     pass: process.env.MAIL_PASSWORD,
+//   },
+// });
 
 const sendVerificationEmail = async (email, verificationToken) => {
   try {
     const verificationUrl = `${process.env.CLIENT_URL}/api/v1/auth/verify-email?token=${verificationToken}`;
 
-    const mailOptions = {
-      from: `"MemoryTree" <${process.env.MAIL_USER}>`,
+    await resend.emails.send({
+      from: `"MemoryTree" <onboarding@resend.dev>`,
       to: email,
       subject: "Verify Your Email Addresss",
       html: `
@@ -109,10 +113,10 @@ const sendVerificationEmail = async (email, verificationToken) => {
         </body>
         </html>
             `,
-    };
+    })
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log("✅ Verification email sent:", info.messageId);
+    // const info = await transporter.sendMail(mailOptions);
+    console.log("✅ Verification email sent");
     return true;
   } catch (error) {
     console.error("❌ Email send error:", error);
@@ -122,8 +126,8 @@ const sendVerificationEmail = async (email, verificationToken) => {
 
 const sendWelcomeEmail = async (email, name) => {
   try {
-    const mailOptions = {
-      from: `"MemoryTree" <${process.env.MAIL_USER}>`,
+    await  mailOptions( {
+      from: `"MemoryTree" <onboarding@resend.dev>`,
       to: email,
       subject: "Welcome to MemoryTree! 🎉",
       html: `
@@ -181,8 +185,8 @@ const sendWelcomeEmail = async (email, name) => {
         </body>
         </html>
       `,
-    };
-    await transporter.sendMail(mailOptions);
+    })
+    // await transporter.sendMail(mailOptions);
     console.log("✅ Welcome email sent");
   } catch (error) {
     console.error("❌ Welcome email error:", error);
