@@ -15,10 +15,10 @@ const uploadOnCloudinary = (buffer, folder) => {
           console.log("❌ Cloudinary upload failed:", error);
           reject(error);
         } else {
-          console.log("✅ Cloudinary upload successful:", {
-            url: result.secure_url,
-            publicId: result.public_id,
-          });
+          // console.log("✅ Cloudinary upload successful:", {
+          //   url: result.secure_url,
+          //   publicId: result.public_id,
+          // });
           resolve(result);
         }
       },

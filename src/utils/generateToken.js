@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
 const generateAccessToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_ACCESS_KEY, {
-    expiresIn: "1d",
+    expiresIn: "24h",
   });
 };
 

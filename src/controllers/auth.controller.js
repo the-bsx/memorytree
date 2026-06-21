@@ -236,10 +236,10 @@ const refreshToken = asyncHandler(async (req, res) => {
 
   //generate new access token
   const accessToken = generateAccessToken(user.id);
-
+  const {refresh_token, ...safeUser} = user;
   return res
     .status(200)
-    .json(new ApiResponse(200, "Token refreshed Sucessfully", { accessToken }));
+    .json(new ApiResponse(200, "Token refreshed Sucessfully", { accessToken, user:safeUser }));
 });
 
 export {

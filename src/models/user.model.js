@@ -35,7 +35,7 @@ const userModel = {
 
   async findById(id) {
     const result = await pool.query(
-      `SELECT id, name, email, avatar_url, timezone, email_verified, is_active,refresh_token created_at
+      `SELECT id, name, email, avatar_url, timezone, email_verified, is_active,refresh_token, created_at
             FROM users where id = $1 AND deleted_at IS NULL`,
       [id],
     );
