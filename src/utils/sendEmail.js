@@ -17,7 +17,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
   try {
     const verificationUrl = `${process.env.CLIENT_URL}/api/v1/auth/verify-email?token=${verificationToken}`;
 
-    await resend.emails.send({
+     const response = await resend.emails.send({
       from: `"MemoryTree" <onboarding@resend.dev>`,
       to: email,
       subject: "Verify Your Email Addresss",
@@ -116,7 +116,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
     })
 
     // const info = await transporter.sendMail(mailOptions);
-    console.log("✅ Verification email sent");
+    console.log("✅ Verification email sent:", response);
     return true;
   } catch (error) {
     console.error("❌ Email send error:", error);
