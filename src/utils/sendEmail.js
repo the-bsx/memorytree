@@ -126,7 +126,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
 
 const sendWelcomeEmail = async (email, name) => {
   try {
-    await  mailOptions( {
+    await  resend.emails.send( {
       from: `"MemoryTree" <onboarding@resend.dev>`,
       to: email,
       subject: "Welcome to MemoryTree! 🎉",
