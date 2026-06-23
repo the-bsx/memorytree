@@ -1,20 +1,15 @@
-import * as brevo from "@getbrevo/brevo";
-//
+import { BrevoClient } from '@getbrevo/brevo';
 
-const apiInstance = new brevo.TransactionalEmailsApi();
-apiInstance.setApiKey(
-  brevo.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY,
-);
+const brevo = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
+})
+
 
 const sendVerificationEmail = async (email, verificationToken) => {
   try {
     const verificationUrl = `${process.env.BASE_URL}/api/v1/auth/verify-email?token=${verificationToken}`;
 
-    const sendSmtpEmail = new brevo.SendSmtpEmail();
-    sendSmtpEmail.subject = "Verify Your Email Address";
-
-    sendSmtpEmail.htmlContent = `
+    const htmlContent = `
              <!DOCTYPE html>
         <html>
         <head>
@@ -106,13 +101,14 @@ const sendVerificationEmail = async (email, verificationToken) => {
         </body>
         </html>
         `;
-    sendSmtpEmail.sender = {
-      name: "MemoryTree",
-      email: process.env.BREVO_SENDER_EMAIL,
-    };
-    sendSmtpEmail.to = [{ email }];
+        await Brevo.transactionalEmails.sendTransacEmail({
+      subject: "Verify Your Email Address",
+      htmlContent,
+      sender: { name: "MemoryTree", email: process.env.BREVO_SENDER_EMAIL },
+      to: [{ email }],
+    });
 
-    await apiInstance.sendTransacEmail(sendSmtpEmail);
+
     console.log("✅ Verification email sent");
     return true;
   } catch (error) {
@@ -123,10 +119,8 @@ const sendVerificationEmail = async (email, verificationToken) => {
 
 const sendWelcomeEmail = async (email, name) => {
   try {
-    const sendSmtpEmail = new brevo.SendSmtpEmail();
-    sendSmtpEmail.subject = "Welcome to MemoryTree! 🎉";
 
-    sendSmtpEmail.htmlConten = `
+    const htmlContent = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -182,12 +176,12 @@ const sendWelcomeEmail = async (email, name) => {
         </html>
       `;
 
-    sendSmtpEmail.sender = {
-      name: "MemoryTree",
-      email: process.env.BREVO_SENDER_EMAIL,
-    };
-    sendSmtpEmail.to = [{ email }];
-    await apiInstance.sendTransacEmail(sendSmtpEmail);
+      await brevo.transactionalEmails.sendTransacEmail({
+      subject: "Welcome to MemoryTree! 🎉",
+      htmlContent,
+      sender: { name: "MemoryTree", email: process.env.BREVO_SENDER_EMAIL },
+      to: [{ email }],
+    });
 
     console.log("✅ Welcome email sent");
   } catch (error) {
