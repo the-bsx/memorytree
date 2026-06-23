@@ -1,8 +1,13 @@
+import brevo from "@getbrevo/brevo";
 // import nodemailer from "nodemailer";
-import { Resend } from "resend";
+// import { Resend } from "resend";
 
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+const apiInstance = new brevo.TransactionalEmailsApi();
+apiInstance.setApiKey(
+  brevo.TransactionalEmailsApiApiKeys.apiKey,
+  process.env.BREVO_API_KEY,
+);
+// const resend = new Resend(process.env.RESEND_API_KEY);
 
 // const transporter = nodemailer.createTransport({
 //   host: process.env.MAIL_HOST,
@@ -15,13 +20,12 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendVerificationEmail = async (email, verificationToken) => {
   try {
-    const verificationUrl = `${process.env.CLIENT_URL}/api/v1/auth/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${process.env.BASE_URL}/api/v1/auth/verify-email?token=${verificationToken}`;
 
-     const response = await resend.emails.send({
-      from: `"MemoryTree" <onboarding@resend.dev>`,
-      to: email,
-      subject: "Verify Your Email Addresss",
-      html: `
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    sendSmtpEmail.subject = "Verify Your Email Address";
+
+    sendSmtpEmail.htmlContent = `
              <!DOCTYPE html>
         <html>
         <head>
@@ -112,25 +116,28 @@ const sendVerificationEmail = async (email, verificationToken) => {
           </div>
         </body>
         </html>
-            `,
-    })
+        `;
+    sendSmtpEmail.sender = {
+      name: "MemoryTree",
+      email: process.env.BREVO_SENDER_EMAIL,
+    };
+    sendSmtpEmail.to = [{ email }];
 
-    // const info = await transporter.sendMail(mailOptions);
-    console.log("✅ Verification email sent:", response);
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log("✅ Verification email sent");
     return true;
   } catch (error) {
-    console.error("❌ Email send error:", error);
+    console.error("❌ Email send error:", error.response?.body || error);
     throw new Error("Failed to send verification email");
   }
 };
 
 const sendWelcomeEmail = async (email, name) => {
   try {
-    await  resend.emails.send( {
-      from: `"MemoryTree" <onboarding@resend.dev>`,
-      to: email,
-      subject: "Welcome to MemoryTree! 🎉",
-      html: `
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    sendSmtpEmail.subject = "Welcome to MemoryTree! 🎉";
+
+    sendSmtpEmail.htmlConten = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -184,12 +191,18 @@ const sendWelcomeEmail = async (email, name) => {
           </div>
         </body>
         </html>
-      `,
-    })
-    // await transporter.sendMail(mailOptions);
+      `;
+
+    sendSmtpEmail.sender = {
+      name: "MemoryTree",
+      email: process.env.BREVO_SENDER_EMAIL,
+    };
+    sendSmtpEmail.to = [{ email }];
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+
     console.log("✅ Welcome email sent");
   } catch (error) {
-    console.error("❌ Welcome email error:", error);
+    console.error("❌ Welcome email error:", error.response?.body || error);
   }
 };
 
