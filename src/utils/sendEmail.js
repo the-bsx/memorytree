@@ -101,7 +101,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
         </body>
         </html>
         `;
-        await Brevo.transactionalEmails.sendTransacEmail({
+        await brevo.transactionalEmails.sendTransacEmail({
       subject: "Verify Your Email Address",
       htmlContent,
       sender: { name: "MemoryTree", email: process.env.BREVO_SENDER_EMAIL },
