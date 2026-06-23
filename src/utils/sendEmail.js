@@ -1,22 +1,11 @@
 import brevo from "@getbrevo/brevo";
-// import nodemailer from "nodemailer";
-// import { Resend } from "resend";
+//
 
 const apiInstance = new brevo.TransactionalEmailsApi();
 apiInstance.setApiKey(
   brevo.TransactionalEmailsApiApiKeys.apiKey,
   process.env.BREVO_API_KEY,
 );
-// const resend = new Resend(process.env.RESEND_API_KEY);
-
-// const transporter = nodemailer.createTransport({
-//   host: process.env.MAIL_HOST,
-//   port: process.env.MAIL_PORT || 587,
-//   auth: {
-//     user: process.env.MAIL_USER,
-//     pass: process.env.MAIL_PASSWORD,
-//   },
-// });
 
 const sendVerificationEmail = async (email, verificationToken) => {
   try {
